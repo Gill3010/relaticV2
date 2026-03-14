@@ -9,9 +9,14 @@ export function Footer() {
 
                 {/* Columna Principal - Info General */}
                 <div className="md:col-span-2">
-                    <h2 className="text-3xl font-bold tracking-tight text-white mb-4">
-                        Relatic<span className="text-cta">V2</span>
-                    </h2>
+                    <div className="flex flex-col mb-4">
+                        <span className="text-3xl font-black tracking-tighter text-white leading-none">
+                            RELATIC <span className="text-cta">PANAMÁ</span>
+                        </span>
+                        <span className="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest leading-tight mt-1.5">
+                            Red Latinoamericana de<br />Investigaciones Cualitativas...
+                        </span>
+                    </div>
                     <p className="text-slate-400 max-w-sm mb-6 leading-relaxed">
                         Impulsando el conocimiento y la educación a través de soluciones digitales de alto impacto en toda América Latina.
                     </p>

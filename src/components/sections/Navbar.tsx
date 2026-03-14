@@ -17,7 +17,7 @@ export function Navbar() {
         { name: 'Carteles Digitales', description: 'Presentaciones interactivas modernas', icon: Monitor },
         { name: 'Libros Digitales', description: 'Edición y distribución de e-books', icon: Book },
         { name: 'Plataforma de aprendizaje continuo', description: 'Cursos y actualizaciones constantes', icon: GraduationCap },
-        { name: 'Propiedad Intelectual', description: 'Protección de tus creaciones', icon: Scale },
+        { name: 'Propiedad Intelectual', description: 'Protección de tus creaciones', icon: Scale, badge: 'Próximamente' },
     ];
 
     return (
@@ -25,7 +25,14 @@ export function Navbar() {
             <nav className="max-w-7xl mx-auto glass rounded-2xl px-6 py-4 flex items-center justify-between text-slate-800 dark:text-white bg-white/40 dark:bg-slate-900/40">
                 {/* Logo */}
                 <div className="flex-shrink-0 flex items-center focus:outline-none cursor-pointer">
-                    <span className="text-2xl font-bold tracking-tight">Relatic<span className="text-cta">V2</span></span>
+                    <div className="flex flex-col">
+                        <span className="text-2xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+                            RELATIC <span className="text-cta">PANAMÁ</span>
+                        </span>
+                        <span className="text-[0.6rem] font-bold text-slate-500 uppercase tracking-widest leading-tight mt-1">
+                            Red Latinoamericana de<br />Investigaciones Cualitativas...
+                        </span>
+                    </div>
                 </div>
 
                 {/* Desktop Menu */}
@@ -61,8 +68,15 @@ export function Navbar() {
                                                 <div className="mt-0.5 p-2 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover:bg-cta group-hover:text-slate-900 transition-colors">
                                                     <service.icon className="w-5 h-5" />
                                                 </div>
-                                                <div className="ml-4">
-                                                    <h4 className="text-sm font-semibold mb-1 group-hover:text-cta transition-colors text-slate-900 dark:text-white">{service.name}</h4>
+                                                <div className="ml-4 flex-1">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <h4 className="text-sm font-semibold group-hover:text-cta transition-colors text-slate-900 dark:text-white">{service.name}</h4>
+                                                        {service.badge && (
+                                                            <span className="px-1.5 py-0.5 rounded-md bg-cta/10 text-cta text-[0.65rem] font-bold uppercase tracking-wider border border-cta/20">
+                                                                {service.badge}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-snug">{service.description}</p>
                                                 </div>
                                             </a>
@@ -114,14 +128,23 @@ export function Navbar() {
                             transition={{ type: "spring", damping: 25, stiffness: 200 }}
                             className="fixed top-0 right-0 bottom-0 w-80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl z-[70] p-6 shadow-2xl border-l border-white/20 dark:border-slate-800 overflow-y-auto"
                         >
-                            <div className="flex items-center justify-between mb-8">
-                                <span className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Relatic<span className="text-cta">V2</span></span>
-                                <button
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-                                >
-                                    <X className="w-6 h-6" />
-                                </button>
+                            <div className="flex flex-col mb-8 pr-4">
+                                <div className="flex items-start justify-between">
+                                    <div className="flex flex-col">
+                                        <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+                                            RELATIC <span className="text-cta">PANAMÁ</span>
+                                        </span>
+                                        <span className="text-[0.55rem] font-bold text-slate-500 uppercase tracking-widest leading-tight mt-1">
+                                            Red Latinoamericana de<br />Investigaciones Cualitativas...
+                                        </span>
+                                    </div>
+                                    <button
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="p-2 -mt-2 -mr-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                                    >
+                                        <X className="w-6 h-6" />
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="flex flex-col space-y-2">
@@ -134,7 +157,16 @@ export function Navbar() {
                                             <div className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800 group-hover:bg-cta group-hover:text-slate-900 transition-colors">
                                                 <service.icon className="w-5 h-5 text-slate-500 group-hover:text-slate-900" />
                                             </div>
-                                            <span className="ml-3 text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-cta">{service.name}</span>
+                                            <div className="ml-3 flex flex-col">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-cta">{service.name}</span>
+                                                    {service.badge && (
+                                                        <span className="px-1.5 py-0.5 rounded-md bg-cta/10 text-cta text-[0.6rem] font-bold uppercase tracking-widest border border-cta/20">
+                                                            {service.badge}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </a>
                                     ))}
                                 </div>
