@@ -44,3 +44,32 @@ body {
 .animation-delay-4000 {
   animation-delay: 4s;
 }
+
+/* ── Hero title animated gradient ───────────────────────────────────────── */
+@keyframes shimmer-text {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.hero-title-gradient {
+  background: linear-gradient(110deg,
+      #FDE047 0%,
+      #ffffff 30%,
+      #22D3EE 55%,
+      #ffffff 75%,
+      #FDE047 100%);
+  background-size: 250% 250%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-text 5s ease infinite;
+}

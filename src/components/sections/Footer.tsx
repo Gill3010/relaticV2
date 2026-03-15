@@ -1,4 +1,5 @@
 import { Facebook, Instagram, Linkedin, Youtube, MessageCircleCode, Mail, Phone, MapPin, BookOpen, MonitorPlay, BookText, GraduationCap, Scale, Home, Users, LayoutGrid, MessageSquare, Newspaper } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
@@ -48,11 +49,11 @@ export function Footer() {
                 <div>
                     <h4 className="text-white font-semibold mb-6 uppercase tracking-wider text-sm">Navegación</h4>
                     <ul className="space-y-4">
-                        <li><a href="#inicio" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><Home className="w-5 h-5" strokeWidth={1.5} /> Inicio</a></li>
-                        <li><a href="#instituciones" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><Users className="w-5 h-5" strokeWidth={1.5} /> Convenios</a></li>
-                        <li><a href="#servicios" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><LayoutGrid className="w-5 h-5" strokeWidth={1.5} /> Servicios</a></li>
-                        <li><a href="#blog" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><Newspaper className="w-5 h-5" strokeWidth={1.5} /> Blog</a></li>
-                        <li><a href="#contacto" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><MessageSquare className="w-5 h-5" strokeWidth={1.5} /> Contacto</a></li>
+                        <li><a href="/#inicio" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><Home className="w-5 h-5" strokeWidth={1.5} /> Inicio</a></li>
+                        <li><a href="/#instituciones" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><Users className="w-5 h-5" strokeWidth={1.5} /> Convenios</a></li>
+                        <li><a href="/#servicios" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><LayoutGrid className="w-5 h-5" strokeWidth={1.5} /> Servicios</a></li>
+                        <li><a href="/#blog" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><Newspaper className="w-5 h-5" strokeWidth={1.5} /> Blog</a></li>
+                        <li><a href="/#contacto" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><MessageSquare className="w-5 h-5" strokeWidth={1.5} /> Contacto</a></li>
                     </ul>
                 </div>
 
@@ -60,11 +61,11 @@ export function Footer() {
                 <div>
                     <h4 className="text-white font-semibold mb-6 uppercase tracking-wider text-sm">Servicios</h4>
                     <ul className="space-y-4">
-                        <li><a href="#revistas" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><BookOpen className="w-5 h-5" strokeWidth={1.5} /> Revistas Indexadas</a></li>
-                        <li><a href="#carteles" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><MonitorPlay className="w-5 h-5" strokeWidth={1.5} /> Carteles Digitales</a></li>
-                        <li><a href="#libros" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><BookText className="w-5 h-5" strokeWidth={1.5} /> Libros Digitales</a></li>
-                        <li><a href="#cursos" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><GraduationCap className="w-5 h-5" strokeWidth={1.5} /> Aprendizaje Continuo</a></li>
-                        <li><a href="#propiedad" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><Scale className="w-5 h-5" strokeWidth={1.5} /> Propiedad Intelectual</a></li>
+                        <li><a href="/#revistas" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><BookOpen className="w-5 h-5" strokeWidth={1.5} /> Revistas Indexadas</a></li>
+                        <li><a href="/#carteles" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><MonitorPlay className="w-5 h-5" strokeWidth={1.5} /> Carteles Digitales</a></li>
+                        <li><a href="/#libros" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><BookText className="w-5 h-5" strokeWidth={1.5} /> Libros Digitales</a></li>
+                        <li><a href="/#cursos" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><GraduationCap className="w-5 h-5" strokeWidth={1.5} /> Aprendizaje Continuo</a></li>
+                        <li><a href="/#propiedad" className="flex items-center gap-3 hover:text-cta transition-colors text-sm"><Scale className="w-5 h-5" strokeWidth={1.5} /> Propiedad Intelectual</a></li>
                     </ul>
                 </div>
 
@@ -102,8 +103,8 @@ export function Footer() {
                 </div>
                 <div className="flex flex-col items-center md:items-end gap-2">
                     <div className="flex space-x-6">
-                        <a href="#" className="hover:text-white transition-colors">Políticas de Privacidad</a>
-                        <a href="#" className="hover:text-white transition-colors">Términos de Servicio</a>
+                        <Link to="/privacidad" className="hover:text-white transition-colors">Políticas de Privacidad</Link>
+                        <Link to="/terminos" className="hover:text-white transition-colors">Términos de Servicio</Link>
                     </div>
                     <p>Powered by <span className="font-medium text-cta">Innova Proyectos</span></p>
                 </div>
@@ -111,3 +112,4 @@ export function Footer() {
         </footer>
     );
 }
+
