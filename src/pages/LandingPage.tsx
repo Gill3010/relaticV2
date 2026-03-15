@@ -3,6 +3,8 @@ import { Hero } from '../components/sections/Hero';
 import { InstitutionsCarousel } from '../components/sections/InstitutionsCarousel';
 import { Footer } from '../components/sections/Footer';
 import { NetworkCanvas } from '../components/sections/NetworkCanvas';
+import { ExploreRelatic } from '../components/sections/ExploreRelatic';
+import { ScrollIndicator } from '../components/sections/ScrollIndicator';
 
 export function LandingPage() {
     return (
@@ -20,14 +22,20 @@ export function LandingPage() {
             {/* Hero full-width (fuera del contenedor para llegar de borde a borde) */}
             <Hero />
 
+            {/* Nueva sección de llamado a la acción */}
+            <ExploreRelatic />
+
             {/* Espacio entre Hero y NetworkCanvas — igual que antes */}
-            <div className="mb-16" />
+            <div className="mb-8" />
 
             {/* Nuevo Canvas Moderno Interactivo */}
             <NetworkCanvas />
 
             <InstitutionsCarousel />
             <Footer />
+            
+            {/* Indicador de Scroll Global */}
+            <ScrollIndicator />
         </div>
     );
 }
