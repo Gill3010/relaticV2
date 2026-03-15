@@ -6,24 +6,38 @@ export function Hero() {
     const slides = [
         {
             id: 1,
-            title: "Educación Continua",
-            description: "Plataformas modernas para el aprendizaje en la era digital.",
-            ctaText: "Ver Cursos",
-            link: "#cursos"
-        },
-        {
-            id: 2,
-            title: "Publicaciones Indexadas",
-            description: "Lleva tus investigaciones académicas al siguiente nivel.",
+            title: "Revistas Indexadas",
+            description: "Publicación académica de alto impacto para investigadores y autores.",
             ctaText: "Publicar ahora",
             link: "#revistas"
         },
         {
-            id: 3,
+            id: 2,
             title: "Carteles Digitales",
-            description: "La forma más dinámica e interactiva de presentar tus ideas.",
+            description: "Presentaciones interactivas modernas para compartir tus ideas.",
             ctaText: "Crear Cartel",
             link: "#carteles"
+        },
+        {
+            id: 3,
+            title: "Libros Digitales",
+            description: "Edición y distribución de e-books para llegar a más lectores.",
+            ctaText: "Publicar Libro",
+            link: "#libros"
+        },
+        {
+            id: 4,
+            title: "Aprendizaje Continuo",
+            description: "Cursos y actualizaciones constantes para mantenerte a la vanguardia.",
+            ctaText: "Ver Cursos",
+            link: "#cursos"
+        },
+        {
+            id: 5,
+            title: "Propiedad Intelectual",
+            description: "Protección de tus creaciones — próximamente disponible.",
+            ctaText: "Saber más",
+            link: "#propiedad"
         },
     ];
 
@@ -49,10 +63,9 @@ export function Hero() {
         let particles: { x: number, y: number, z: number }[] = [];
         let rotationX = 0;
         let rotationY = 0;
+        // Normalized mouse position [-1, 1] used as speed boost
         let mouseX = 0;
         let mouseY = 0;
-        let targetRotationX = 0;
-        let targetRotationY = 0;
 
         const initParticles = () => {
             particles = [];
@@ -89,12 +102,9 @@ export function Hero() {
 
         const handleMouseMove = (e: MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
-            // Normalizar a [-1, 1]
+            // Normalizar a [-1, 1]: el cursor aporta un boost proporcional a su distancia del centro
             mouseX = ((e.clientX - rect.left) / canvas.width) * 2 - 1;
             mouseY = ((e.clientY - rect.top) / canvas.height) * 2 - 1;
-
-            targetRotationX = mouseY * 0.3; // Limitamos qué tanto gira para no marear
-            targetRotationY = mouseX * 0.3;
         };
 
         canvas.addEventListener('mousemove', handleMouseMove);
@@ -104,11 +114,17 @@ export function Hero() {
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const autoSpeedX = 0.003;
-            const autoSpeedY = 0.005;
+            // Velocidad base constante (el globo NUNCA para)
+            const autoSpeedX = 0.002;
+            const autoSpeedY = 0.008;
 
-            rotationX += (targetRotationX - rotationX) * 0.08 + autoSpeedX;
-            rotationY += (targetRotationY - rotationY) * 0.08 + autoSpeedY;
+            // El cursor suma velocidad adicional proporcional a su posición:
+            // cursor a la derecha → gira más rápido a la derecha, etc.
+            const boostY = mouseX * 0.025;
+            const boostX = mouseY * 0.012;
+
+            rotationX += autoSpeedX + boostX;
+            rotationY += autoSpeedY + boostY;
 
             const cosX = Math.cos(rotationX);
             const sinX = Math.sin(rotationX);

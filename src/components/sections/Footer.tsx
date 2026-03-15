@@ -76,7 +76,7 @@ export function Footer() {
                             <div className="p-2.5 rounded-xl bg-slate-800/60 shadow-inner border border-slate-700/50 flex items-center justify-center">
                                 <Mail className="w-4 h-4 text-slate-300" />
                             </div>
-                            <a href="mailto:gerencia@relaticpanama.org" className="hover:text-cta transition-colors text-base text-slate-200">gerencia@relaticpanama.org</a>
+                            <a href="mailto:administracion@relaticpanama.org" className="hover:text-cta transition-colors text-base text-slate-200">administracion@relaticpanama.org</a>
                         </li>
                         <li className="flex items-center gap-3">
                             <div className="p-2.5 rounded-xl bg-slate-800/60 shadow-inner border border-slate-700/50 flex items-center justify-center">
@@ -97,7 +97,7 @@ export function Footer() {
 
             <div className="max-w-7xl mx-auto pt-8 border-t border-slate-800/60 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500 gap-4">
                 <div className="text-center md:text-left">
-                    <p>© {currentYear} RelaticV2. Todos los derechos reservados.</p>
+                    <p>© {currentYear} Relatic Panamá. Todos los derechos reservados.</p>
                     <p className="mt-1">Ciencia, Tecnología e Innovación.</p>
                 </div>
                 <div className="flex flex-col items-center md:items-end gap-2">
