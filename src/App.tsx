@@ -2,6 +2,7 @@ import { Navbar } from './components/sections/Navbar';
 import { Hero } from './components/sections/Hero';
 import { InstitutionsCarousel } from './components/sections/InstitutionsCarousel';
 import { Footer } from './components/sections/Footer';
+import { NetworkCanvas } from './components/sections/NetworkCanvas';
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
 
         <Hero />
       </main>
+
+      {/* Nuevo Canvas Moderno Interactivo */}
+      <NetworkCanvas />
 
       <InstitutionsCarousel />
       <Footer />
