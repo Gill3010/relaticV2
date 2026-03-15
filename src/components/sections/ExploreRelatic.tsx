@@ -39,10 +39,11 @@ export function ExploreRelatic() {
                         </div>
 
                         <div className="flex-shrink-0">
-                            <motion.button
+                            <motion.a
+                                href="https://miembros.relatic.org/login"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="group/btn relative px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold flex items-center gap-3 shadow-lg hover:shadow-cta/20 transition-all overflow-hidden text-sm"
+                                className="group/btn relative px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl font-bold inline-flex items-center gap-3 shadow-lg hover:shadow-cta/20 transition-all overflow-hidden text-sm"
                             >
                                 <span className="relative z-10">Conocer más</span>
                                 <ArrowRight className="relative z-10 group-hover/btn:translate-x-1 transition-transform" size={18} />
@@ -50,7 +51,7 @@ export function ExploreRelatic() {
                                 {/* Button background animate */}
                                 <div className="absolute inset-0 bg-gradient-to-r from-cta to-cyan-400 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
                                 <div className="absolute inset-0 bg-slate-900 dark:bg-white group-hover/btn:scale-x-0 transition-transform origin-left duration-500" />
-                            </motion.button>
+                            </motion.a>
                         </div>
                     </div>
 
