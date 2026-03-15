@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Deterministic pseudo-random (seeded) — keeps scatter positions stable across resizes
 const pr = (seed: number) => {
@@ -49,7 +50,10 @@ export function Hero() {
             setCurrentSlide(prev => (prev + 1) % slides.length);
         }, 5000);
         return () => clearInterval(timer);
-    }, [slides.length]);
+    }, [currentSlide, slides.length]); // Restarts timer when currentSlide changes
+
+    const handleNext = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+    const handlePrev = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
 
     // ── Canvas: globe + background network ──────────────────────────────────
     useEffect(() => {
@@ -367,7 +371,7 @@ export function Hero() {
 
             {/* Hero text content — fade + scale on scroll exit */}
             <motion.div
-                className="relative z-10 text-center px-4 max-w-4xl mx-auto flex flex-col items-center"
+                className="relative z-10 text-center px-14 md:px-24 max-w-5xl mx-auto flex flex-col items-center"
                 style={{ opacity: contentOpacity, scale: contentScale }}
             >
                 {/* Badge block */}
@@ -395,7 +399,7 @@ export function Hero() {
                         transition={{ duration: 0.5 }}
                         className="flex flex-col items-center"
                     >
-                        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 drop-shadow-lg hero-title-gradient">
+                        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 pb-2 drop-shadow-lg hero-title-gradient">
                             {slides[currentSlide].title}
                         </h1>
 
@@ -412,6 +416,23 @@ export function Hero() {
                     </motion.div>
                 </AnimatePresence>
             </motion.div>
+
+            {/* Navigation Arrows */}
+            <button
+                onClick={handlePrev}
+                className="absolute left-4 md:left-12 top-1/2 -translate-y-1/2 z-20 p-2 md:p-4 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-white/50 hover:text-cta hover:border-cta/40 hover:bg-cta/10 hover:scale-110 active:scale-95 transition-all duration-300 group/arrow"
+                aria-label="Anterior slide"
+            >
+                <ChevronLeft className="w-5 h-5 md:w-8 md:h-8 transition-transform group-hover/arrow:-translate-x-0.5" />
+            </button>
+
+            <button
+                onClick={handleNext}
+                className="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 z-20 p-2 md:p-4 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-white/50 hover:text-cta hover:border-cta/40 hover:bg-cta/10 hover:scale-110 active:scale-95 transition-all duration-300 group/arrow"
+                aria-label="Siguiente slide"
+            >
+                <ChevronRight className="w-5 h-5 md:w-8 md:h-8 transition-transform group-hover/arrow:translate-x-0.5" />
+            </button>
 
             {/* Slider dots */}
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-20">
