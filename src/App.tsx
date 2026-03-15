@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { AccessibilityWidget } from './components/AccessibilityWidget';
 import { LandingPage } from './pages/LandingPage';
 import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { TermsOfService } from './pages/TermsOfService';
@@ -17,6 +18,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <AccessibilityWidget />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/privacidad" element={<PrivacyPolicy />} />
