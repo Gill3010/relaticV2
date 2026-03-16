@@ -1,7 +1,7 @@
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useInView } from 'react-intersection-observer';
-import { motion } from 'framer-motion';
+import { motion, animate } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { EarthNode } from '../canvas/EarthNode';
 
@@ -63,10 +63,10 @@ export function GlobalNetwork() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 w-full max-w-5xl mx-auto pb-12"
         >
-            <MetricItem title="+100" subtitle="Artículos de revistas" />
-            <MetricItem title="+50" subtitle="Carteles digitales" />
-            <MetricItem title="+15" subtitle="Cursos" />
-            <MetricItem title="+1" subtitle="Libro publicado" />
+            <MetricItem endValue={100} subtitle="Artículos de revistas" />
+            <MetricItem endValue={50} subtitle="Carteles digitales" />
+            <MetricItem endValue={15} subtitle="Cursos" />
+            <MetricItem endValue={1} subtitle="Libro publicado" />
         </motion.div>
       </div>
 
@@ -92,11 +92,27 @@ export function GlobalNetwork() {
   );
 }
 
-function MetricItem({ title, subtitle }: { title: string, subtitle: string }) {
+function MetricItem({ endValue, subtitle }: { endValue: number, subtitle: string }) {
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (inView) {
+      const controls = animate(0, endValue, {
+        duration: 2,
+        ease: "easeOut",
+        onUpdate(value) {
+          setCount(Math.round(value));
+        }
+      });
+      return () => controls.stop();
+    }
+  }, [inView, endValue]);
+
   return (
-    <div className="flex flex-col items-center text-center">
+    <div ref={ref} className="flex flex-col items-center text-center">
       <div className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-cyan-400 to-blue-600 mb-2">
-        {title}
+        {count}+
       </div>
       <div className="text-sm md:text-base font-medium text-slate-700 dark:text-slate-300">
         {subtitle}
