@@ -4,6 +4,7 @@ import { InstitutionsCarousel } from '../components/sections/InstitutionsCarouse
 import { Footer } from '../components/sections/Footer';
 import { NetworkCanvas } from '../components/sections/NetworkCanvas';
 import { ExploreRelatic } from '../components/sections/ExploreRelatic';
+import { GlobalNetwork } from '../components/sections/GlobalNetwork';
 import { ScrollIndicator } from '../components/sections/ScrollIndicator';
 
 export function LandingPage() {
@@ -30,6 +31,9 @@ export function LandingPage() {
 
             {/* Nuevo Canvas Moderno Interactivo */}
             <NetworkCanvas />
+
+            {/* Nuevo Componente React 3D basado en Canvas - El Planeta */}
+            <GlobalNetwork />
 
             <InstitutionsCarousel />
             <Footer />
