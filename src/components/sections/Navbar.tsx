@@ -24,7 +24,12 @@ export function Navbar() {
         <header className="fixed top-0 left-0 right-0 z-50 px-4 py-4">
             <nav className="max-w-7xl mx-auto glass rounded-2xl px-6 py-4 flex items-center justify-between text-slate-800 dark:text-white bg-white/40 dark:bg-slate-900/40">
                 {/* Logo */}
-                <a href="/" className="flex-shrink-0 flex items-center focus:outline-none cursor-pointer">
+                <a href="/" className="flex-shrink-0 flex items-center gap-3 focus:outline-none cursor-pointer">
+                    <img
+                        src="/logo.png"
+                        alt="Relatic Panamá"
+                        className="h-14 w-14 object-contain flex-shrink-0"
+                    />
                     <div className="flex flex-col">
                         <span className="text-2xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
                             RELATIC <span className="text-cta">PANAMÁ</span>
@@ -93,7 +98,7 @@ export function Navbar() {
                 {/* CTA Desktop */}
                 <div className="hidden md:flex">
                     <a href="https://miembros.relatic.org/login" className="bg-cta text-slate-900 font-semibold px-6 py-2.5 rounded-full hover:bg-yellow-400 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-cta/20 inline-block">
-                        Comenzar
+                        Regístrate
                     </a>
                 </div>
 
@@ -130,13 +135,20 @@ export function Navbar() {
                         >
                             <div className="flex flex-col mb-8 pr-4">
                                 <div className="flex items-start justify-between">
-                                    <a href="/" onClick={() => setMobileMenuOpen(false)} className="flex flex-col focus:outline-none">
-                                        <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
-                                            RELATIC <span className="text-cta">PANAMÁ</span>
-                                        </span>
-                                        <span className="text-[0.55rem] font-bold text-slate-500 uppercase tracking-widest leading-tight mt-1">
-                                            Red Latinoamericana de<br />Investigaciones Cualitativas...
-                                        </span>
+                                    <a href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 focus:outline-none">
+                                        <img
+                                            src="/logo.png"
+                                            alt="Relatic Panamá"
+                                            className="h-12 w-12 object-contain flex-shrink-0"
+                                        />
+                                        <div className="flex flex-col">
+                                            <span className="text-xl font-black tracking-tighter text-slate-900 dark:text-white leading-none">
+                                                RELATIC <span className="text-cta">PANAMÁ</span>
+                                            </span>
+                                            <span className="text-[0.55rem] font-bold text-slate-500 uppercase tracking-widest leading-tight mt-1">
+                                                Red Latinoamericana de<br />Investigaciones Cualitativas...
+                                            </span>
+                                        </div>
                                     </a>
                                     <button
                                         onClick={() => setMobileMenuOpen(false)}
@@ -176,7 +188,7 @@ export function Navbar() {
                                 <a href="#contacto" onClick={() => setMobileMenuOpen(false)} className="text-lg font-medium p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-800 dark:text-white mb-6">Contacto</a>
 
                                 <a href="https://miembros.relatic.org/login" onClick={() => setMobileMenuOpen(false)} className="w-full mt-4 bg-cta text-slate-900 font-semibold px-5 py-3.5 rounded-xl hover:bg-yellow-400 shadow-lg shadow-cta/20 transition-all active:scale-95 inline-block text-center">
-                                    Comenzar
+                                    Regístrate
                                 </a>
                             </div>
                         </motion.div>

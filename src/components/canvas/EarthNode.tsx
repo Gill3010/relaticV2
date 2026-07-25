@@ -30,11 +30,11 @@ function ConnectionArc({ start, end, height, color }: { start: THREE.Vector3, en
   const midNormalized = mid.normalize().multiplyScalar(PLANET_RADIUS + distance * height);
 
   const [offset] = useState(() => Math.random() * 100);
-  
+
   useFrame((state) => {
     if (ref.current) {
-        const time = state.clock.getElapsedTime();
-        ref.current.material.dashOffset = time * 0.15 + offset;
+      const time = state.clock.getElapsedTime();
+      ref.current.material.dashOffset = time * 0.15 + offset;
     }
   });
 
@@ -57,48 +57,48 @@ function ConnectionArc({ start, end, height, color }: { start: THREE.Vector3, en
 
 // Data Nodes / Cities
 function DataNodes({ points, color }: { points: THREE.Vector3[], color: string }) {
-    const instances = useMemo(() => {
-        const geometry = new THREE.SphereGeometry(0.03, 8, 8);
-        const material = new THREE.MeshBasicMaterial({ color });
-        const mesh = new THREE.InstancedMesh(geometry, material, points.length);
-        
-        const dummy = new THREE.Object3D();
-        points.forEach((point, i) => {
-            dummy.position.copy(point);
-            dummy.lookAt(new THREE.Vector3(0,0,0)); 
-            dummy.updateMatrix();
-            mesh.setMatrixAt(i, dummy.matrix);
-        });
-        mesh.instanceMatrix.needsUpdate = true;
-        return mesh;
-    }, [points, color]);
+  const instances = useMemo(() => {
+    const geometry = new THREE.SphereGeometry(0.03, 8, 8);
+    const material = new THREE.MeshBasicMaterial({ color });
+    const mesh = new THREE.InstancedMesh(geometry, material, points.length);
 
-    return <primitive object={instances} />;
+    const dummy = new THREE.Object3D();
+    points.forEach((point, i) => {
+      dummy.position.copy(point);
+      dummy.lookAt(new THREE.Vector3(0, 0, 0));
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+    return mesh;
+  }, [points, color]);
+
+  return <primitive object={instances} />;
 }
 
 // Orbiting Particles (Satellites) + Dynamic Network
 function OrbitingParticles({ count, color, radiusOffset }: { count: number, color: string, radiusOffset: number }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const linesRef = useRef<THREE.LineSegments>(null);
-  
+
   const particles = useMemo(() => {
     const items = [];
     for (let i = 0; i < count; i++) {
-        const radius = PLANET_RADIUS + radiusOffset + Math.random() * 0.4;
-        const speed = (0.05 + Math.random() * 0.2) * (Math.random() > 0.5 ? 1 : -1);
-        
-        // Random rotation axis
-        const axis = new THREE.Vector3(
-          Math.random() - 0.5,
-          Math.random() - 0.5,
-          Math.random() - 0.5
-        ).normalize();
-        
-        const pos = new THREE.Vector3(radius, 0, 0);
-        pos.applyAxisAngle(new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2);
-        pos.applyAxisAngle(new THREE.Vector3(0, 0, 1), Math.random() * Math.PI * 2);
+      const radius = PLANET_RADIUS + radiusOffset + Math.random() * 0.4;
+      const speed = (0.05 + Math.random() * 0.2) * (Math.random() > 0.5 ? 1 : -1);
 
-        items.push({ pos, axis, speed });
+      // Random rotation axis
+      const axis = new THREE.Vector3(
+        Math.random() - 0.5,
+        Math.random() - 0.5,
+        Math.random() - 0.5
+      ).normalize();
+
+      const pos = new THREE.Vector3(radius, 0, 0);
+      pos.applyAxisAngle(new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2);
+      pos.applyAxisAngle(new THREE.Vector3(0, 0, 1), Math.random() * Math.PI * 2);
+
+      items.push({ pos, axis, speed });
     }
     return items;
   }, [count, radiusOffset]);
@@ -115,7 +115,7 @@ function OrbitingParticles({ count, color, radiusOffset }: { count: number, colo
     // Update particle positions
     particles.forEach((particle, i) => {
       particle.pos.applyAxisAngle(particle.axis, particle.speed * delta);
-      
+
       if (meshRef.current) {
         dummy.position.copy(particle.pos);
         dummy.updateMatrix();
@@ -134,19 +134,19 @@ function OrbitingParticles({ count, color, radiusOffset }: { count: number, colo
         const p1 = particles[i].pos;
         const p2 = particles[j].pos;
         if (p1.distanceToSquared(p2) < thresholdSq) {
-           positions[lineIndex++] = p1.x;
-           positions[lineIndex++] = p1.y;
-           positions[lineIndex++] = p1.z;
-           positions[lineIndex++] = p2.x;
-           positions[lineIndex++] = p2.y;
-           positions[lineIndex++] = p2.z;
+          positions[lineIndex++] = p1.x;
+          positions[lineIndex++] = p1.y;
+          positions[lineIndex++] = p1.z;
+          positions[lineIndex++] = p2.x;
+          positions[lineIndex++] = p2.y;
+          positions[lineIndex++] = p2.z;
         }
       }
     }
-    
+
     if (linesRef.current) {
-       linesRef.current.geometry.setDrawRange(0, lineIndex / 3);
-       linesRef.current.geometry.attributes.position.needsUpdate = true;
+      linesRef.current.geometry.setDrawRange(0, lineIndex / 3);
+      linesRef.current.geometry.attributes.position.needsUpdate = true;
     }
   });
 
@@ -222,12 +222,12 @@ export function EarthNode() {
     const result = [];
     const nodePoints = [];
     for (let i = 0; i < arcCount; i++) {
-        const start = getRandomPointOnSphere(PLANET_RADIUS);
-        const end = getRandomPointOnSphere(PLANET_RADIUS);
-        if (start.distanceTo(end) > 1.5) {
-            result.push({ start, end });
-            nodePoints.push(start, end);
-        }
+      const start = getRandomPointOnSphere(PLANET_RADIUS);
+      const end = getRandomPointOnSphere(PLANET_RADIUS);
+      if (start.distanceTo(end) > 1.5) {
+        result.push({ start, end });
+        nodePoints.push(start, end);
+      }
     }
     return { arcs: result, nodes: nodePoints };
   }, [arcCount]);
@@ -243,7 +243,7 @@ export function EarthNode() {
       <ambientLight intensity={0.5} />
       {/* Position down so ONLY the top hemisphere is clearly visible in the container */}
       <group ref={groupRef} position={[0, -1.8, 0]}>
-        
+
         {/* Core sphere - to give some baseline depth and hide back-side lines */}
         <Sphere args={[PLANET_RADIUS * 0.98, 32, 32]}>
           <meshBasicMaterial color="#ffffff" transparent opacity={0.6} />
@@ -255,11 +255,11 @@ export function EarthNode() {
         {/* Connection Arcs */}
         {arcs.arcs.map((arc, i) => (
           <ConnectionArc
-             key={i}
-             start={arc.start}
-             end={arc.end}
-             height={0.4}
-             color={ARC_COLOR}
+            key={i}
+            start={arc.start}
+            end={arc.end}
+            height={0.4}
+            color={ARC_COLOR}
           />
         ))}
 
