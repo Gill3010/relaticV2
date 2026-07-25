@@ -6,6 +6,7 @@ import { NetworkCanvas } from '../components/sections/NetworkCanvas';
 import { ExploreRelatic } from '../components/sections/ExploreRelatic';
 import { GlobalNetwork } from '../components/sections/GlobalNetwork';
 import { ScrollIndicator } from '../components/sections/ScrollIndicator';
+import { ChatWidget } from '../features/chatbot/ChatWidget';
 
 export function LandingPage() {
     return (
@@ -40,6 +41,9 @@ export function LandingPage() {
             
             {/* Indicador de Scroll Global */}
             <ScrollIndicator />
+
+            {/* Asistente de documentos (widget embebido) */}
+            <ChatWidget />
         </div>
     );
 }

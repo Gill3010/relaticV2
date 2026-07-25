@@ -1,0 +1,27 @@
+# Plantilla de referencia para Passenger (NO subir secretos a Git).
+# En producción vive en: public_html/api/chat/.htaccess
+# Copia este archivo, rellena valores reales en el servidor (cPanel / SSH)
+# y NUNCA commits passwords ni DOWNLOAD_TOKEN_SECRET.
+
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/zts5eyzr4hri/public_html/chatbot/backend"
+PassengerBaseURI "/api/chat"
+PassengerNodejs "/home/zts5eyzr4hri/nodevenv/public_html/chatbot/backend/24/bin/node"
+PassengerAppType node
+PassengerStartupFile app.js
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION BEGIN
+<IfModule Litespeed>
+SetEnv NODE_ENV production
+SetEnv PORT 3000
+SetEnv DB_HOST localhost
+SetEnv DB_PORT 3306
+SetEnv DB_NAME relatic_chatbot
+SetEnv DB_USER chatbot_user
+SetEnv DB_PASSWORD CHANGE_ME
+SetEnv CORS_ORIGINS https://relaticpanama.org,https://www.relaticpanama.org,http://localhost:5173,http://localhost:4173
+SetEnv API_BASE_PATH /api/chat
+SetEnv PUBLIC_BASE_URL https://relaticpanama.org
+SetEnv DOWNLOAD_TOKEN_SECRET CHANGE_ME_LONG_RANDOM_HEX
+</IfModule>
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION END

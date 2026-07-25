@@ -35,7 +35,7 @@ export function ScrollIndicator() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.4 }}
-                    className="fixed bottom-10 right-6 md:right-10 z-[100] flex flex-col items-center gap-2 cursor-pointer group"
+                    className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[50] flex flex-col items-center gap-2 cursor-pointer group"
                     onClick={() => window.scrollBy({ top: 400, behavior: 'smooth' })}
                 >
                     <span className="text-white/50 text-[10px] font-bold tracking-[0.3em] uppercase select-none group-hover:text-cta transition-colors duration-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">

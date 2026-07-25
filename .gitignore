@@ -16,6 +16,9 @@ dist.zip
 dist-ssr
 *.local
 
+# Passenger con secretos de producción (usar .htaccess.example)
+deploy/passenger-api/chat/.htaccess
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -1,0 +1,13 @@
+RewriteEngine On
+RewriteBase /
+
+# API Node (Passenger) — no enviar a la SPA
+RewriteRule ^api(?:/|$) - [L]
+
+# Chatbot — su propio index/assets
+RewriteRule ^chatbot(?:/|$) - [L]
+
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
