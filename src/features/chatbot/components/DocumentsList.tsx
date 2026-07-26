@@ -37,7 +37,7 @@ export function DocumentsList({ documents = [] }: DocumentsListProps) {
               </div>
               <a
                 href={doc.download_url}
-                target="_blank"
+                download={`${(doc.titulo || `documento-${doc.id}`).replace(/[/\\?%*:|"<>]/g, '-').trim() || `documento-${doc.id}`}.pdf`}
                 rel="noopener noreferrer"
                 className="inline-flex shrink-0 items-center justify-center rounded-lg bg-cta px-3 py-2 text-xs font-semibold text-slate-900 transition hover:bg-yellow-400"
               >
