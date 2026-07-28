@@ -7,6 +7,8 @@ type IdentityFormProps = {
   submitLabel?: string;
   helperText?: string;
   loading?: boolean;
+  /** lookup: cédula o nombre; register: nombre obligatorio */
+  mode?: 'lookup' | 'register';
   onSubmit: (data: IdentityPayload) => void;
 };
 
@@ -16,6 +18,7 @@ export function IdentityForm({
   submitLabel = 'Continuar',
   helperText,
   loading = false,
+  mode = 'lookup',
   onSubmit,
 }: IdentityFormProps) {
   const [nombre, setNombre] = useState(initialName);
@@ -25,20 +28,35 @@ export function IdentityForm({
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const nombre_completo = nombre.trim();
-    if (nombre_completo.length < 3) {
-      setError('Ingresa tu nombre completo (mínimo 3 caracteres).');
+    const cedulaTrim = cedula.trim();
+
+    if (cedulaTrim && !/\d/.test(cedulaTrim)) {
+      setError('La cédula debe incluir al menos un número.');
       return;
     }
-    if (cedula.trim() && !/^[0-9A-Za-z\- ]+$/.test(cedula.trim())) {
-      setError('La cédula solo puede incluir letras, números, guiones y espacios.');
+
+    if (mode === 'register') {
+      if (nombre_completo.length < 3) {
+        setError('Ingresa tu nombre completo (mínimo 3 caracteres).');
+        return;
+      }
+    } else if (!cedulaTrim && nombre_completo.length < 3) {
+      setError('Indica tu cédula o tu nombre completo (mínimo 3 caracteres).');
       return;
     }
+
     setError('');
-    onSubmit({
-      nombre_completo,
-      cedula: cedula.trim() || undefined,
-    });
+    const payload: IdentityPayload = {};
+    if (nombre_completo) payload.nombre_completo = nombre_completo;
+    if (cedulaTrim) payload.cedula = cedulaTrim;
+    onSubmit(payload);
   }
+
+  const nameRequired = mode === 'register';
+  const cedulaHint =
+    mode === 'lookup'
+      ? 'Puedes escribirla con o sin guiones o espacios; solo importan los números.'
+      : undefined;
 
   return (
     <form onSubmit={handleSubmit} className="mt-3 space-y-3" noValidate>
@@ -48,29 +66,14 @@ export function IdentityForm({
         </p>
       ) : null}
 
-      <label className="block" htmlFor="chat-nombre">
-        <span className="mb-1.5 block text-xs font-medium tracking-wide text-slate-300">
-          Nombre completo <span className="text-cta">*</span>
-        </span>
-        <input
-          id="chat-nombre"
-          type="text"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          autoComplete="name"
-          disabled={loading}
-          required
-          aria-required="true"
-          aria-invalid={Boolean(error)}
-          aria-describedby={helperText ? 'identity-helper' : undefined}
-          placeholder="Ej. Ana Pérez Gómez"
-          className="w-full rounded-xl border border-white/10 bg-slate-900/60 px-3.5 py-2.5 text-sm text-slate-50 outline-none transition placeholder:text-slate-500 focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-400/20 disabled:opacity-60"
-        />
-      </label>
-
       <label className="block" htmlFor="chat-cedula">
         <span className="mb-1.5 block text-xs font-medium tracking-wide text-slate-300">
-          Cédula <span className="font-normal text-slate-500">(opcional)</span>
+          Cédula{' '}
+          {mode === 'lookup' ? (
+            <span className="font-normal text-slate-500">(recomendada)</span>
+          ) : (
+            <span className="font-normal text-slate-500">(opcional)</span>
+          )}
         </span>
         <input
           id="chat-cedula"
@@ -79,7 +82,40 @@ export function IdentityForm({
           onChange={(e) => setCedula(e.target.value)}
           autoComplete="off"
           disabled={loading}
-          placeholder="Ej. 8-123-456"
+          placeholder="Ej. 8-123-456 o 0302344684"
+          aria-describedby={cedulaHint ? 'cedula-hint' : undefined}
+          className="w-full rounded-xl border border-white/10 bg-slate-900/60 px-3.5 py-2.5 text-sm text-slate-50 outline-none transition placeholder:text-slate-500 focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-400/20 disabled:opacity-60"
+        />
+        {cedulaHint ? (
+          <span id="cedula-hint" className="mt-1 block text-[11px] text-slate-500">
+            {cedulaHint}
+          </span>
+        ) : null}
+      </label>
+
+      <label className="block" htmlFor="chat-nombre">
+        <span className="mb-1.5 block text-xs font-medium tracking-wide text-slate-300">
+          Nombre completo{' '}
+          {nameRequired ? (
+            <span className="text-cta">*</span>
+          ) : (
+            <span className="font-normal text-slate-500">
+              (si no usas cédula)
+            </span>
+          )}
+        </span>
+        <input
+          id="chat-nombre"
+          type="text"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+          autoComplete="name"
+          disabled={loading}
+          required={nameRequired}
+          aria-required={nameRequired}
+          aria-invalid={Boolean(error)}
+          aria-describedby={helperText ? 'identity-helper' : undefined}
+          placeholder="Ej. Ana Pérez Gómez"
           className="w-full rounded-xl border border-white/10 bg-slate-900/60 px-3.5 py-2.5 text-sm text-slate-50 outline-none transition placeholder:text-slate-500 focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-400/20 disabled:opacity-60"
         />
       </label>

@@ -43,7 +43,10 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 }
 
 function buildIdentityBody({ nombre_completo, cedula }: IdentityPayload) {
-  const body: IdentityPayload = { nombre_completo };
+  const body: IdentityPayload = {};
+  if (nombre_completo && String(nombre_completo).trim()) {
+    body.nombre_completo = String(nombre_completo).trim();
+  }
   if (cedula && String(cedula).trim()) {
     body.cedula = String(cedula).trim();
   }

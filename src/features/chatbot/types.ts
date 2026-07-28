@@ -1,5 +1,5 @@
 export type IdentityPayload = {
-  nombre_completo: string;
+  nombre_completo?: string;
   cedula?: string;
 };
 
@@ -39,4 +39,4 @@ export type ChatApiError = Error & {
   data?: unknown;
 };
 
-export type ChatStep = 'identity' | 'result' | 'register' | 'registered';
+export type ChatStep = 'identity' | 'result';

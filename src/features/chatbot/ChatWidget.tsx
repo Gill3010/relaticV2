@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MessageCircle, X } from 'lucide-react';
-import { lookupIdentity, registerIdentity } from './api/chatApi';
+import { lookupIdentity } from './api/chatApi';
 import { ChatShell } from './components/ChatShell';
 import { DocumentsList } from './components/DocumentsList';
 import { IdentityForm } from './components/IdentityForm';
@@ -11,9 +11,10 @@ import type { ChatStep, IdentityPayload, LookupResponse } from './types';
 const STEPS = {
   IDENTITY: 'identity',
   RESULT: 'result',
-  REGISTER: 'register',
-  REGISTERED: 'registered',
 } as const satisfies Record<string, ChatStep>;
+
+const NOT_FOUND_MESSAGE =
+  'Verifique sus datos e inténtelo nuevamente. Si el problema persiste, comuníquese al siguiente contacto: +507 6769-9968.';
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -25,13 +26,12 @@ export function ChatWidget() {
   });
   const [lookup, setLookup] = useState<LookupResponse | null>(null);
   const [error, setError] = useState('');
-  const [registerMessage, setRegisterMessage] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, [open, step, loading, lookup, error, registerMessage]);
+  }, [open, step, loading, lookup, error]);
 
   async function handleLookup(data: IdentityPayload) {
     setLoading(true);
@@ -40,24 +40,16 @@ export function ChatWidget() {
     try {
       const result = await lookupIdentity(data);
       setLookup(result);
+      if (result.user?.nombre_completo) {
+        setIdentity((prev) => ({
+          ...prev,
+          nombre_completo: result.user!.nombre_completo,
+          cedula: result.user!.cedula || prev.cedula,
+        }));
+      }
       setStep(STEPS.RESULT);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No pudimos consultar en este momento.');
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleRegister(data: IdentityPayload) {
-    setLoading(true);
-    setError('');
-    setIdentity(data);
-    try {
-      const result = await registerIdentity(data);
-      setRegisterMessage(result.message || 'Registro creado correctamente.');
-      setStep(STEPS.REGISTERED);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'No pudimos completar el registro.');
     } finally {
       setLoading(false);
     }
@@ -67,7 +59,6 @@ export function ChatWidget() {
     setStep(STEPS.IDENTITY);
     setLookup(null);
     setError('');
-    setRegisterMessage('');
     setIdentity({ nombre_completo: '', cedula: '' });
   }
 
@@ -87,34 +78,43 @@ export function ChatWidget() {
               <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1">
                 <MessageBubble>
                   Hola. Soy el asistente de{' '}
-                  <strong className="font-semibold text-cyan-400">Relatic Panamá</strong>. Indica tu
-                  nombre completo y, si quieres, tu cédula. Si hay documentos asociados, podrás
-                  descargarlos.
+                  <strong className="font-semibold text-cyan-400">Relatic Panamá</strong>. Puedes
+                  buscar con tu <strong className="font-semibold text-slate-100">cédula</strong> o
+                  con tu nombre completo. Si hay documentos asociados, podrás descargarlos.
                 </MessageBubble>
 
-                {(step !== STEPS.IDENTITY || identity.nombre_completo) &&
-                identity.nombre_completo ? (
+                {(step !== STEPS.IDENTITY ||
+                  Boolean(identity.nombre_completo || identity.cedula)) &&
+                (identity.nombre_completo || identity.cedula) ? (
                   <MessageBubble role="user">
-                    {identity.nombre_completo}
                     {identity.cedula ? (
-                      <span className="mt-1 block text-xs text-slate-300">
-                        Cédula: {identity.cedula}
-                      </span>
+                      <>
+                        <span className="block">Cédula: {identity.cedula}</span>
+                        {identity.nombre_completo ? (
+                          <span className="mt-1 block text-xs text-slate-300">
+                            {identity.nombre_completo}
+                          </span>
+                        ) : null}
+                      </>
                     ) : (
-                      <span className="mt-1 block text-xs text-slate-400">Sin cédula</span>
+                      <>
+                        {identity.nombre_completo}
+                        <span className="mt-1 block text-xs text-slate-400">Sin cédula</span>
+                      </>
                     )}
                   </MessageBubble>
                 ) : null}
 
                 {step === STEPS.IDENTITY ? (
                   <MessageBubble>
-                    <p className="font-medium text-slate-50">¿Cómo te llamas?</p>
+                    <p className="font-medium text-slate-50">¿Cómo te identificamos?</p>
                     <IdentityForm
+                      mode="lookup"
                       initialName={identity.nombre_completo}
                       initialCedula={identity.cedula}
                       loading={loading}
                       submitLabel="Buscar documentos"
-                      helperText="Esto no es un registro obligatorio. La cédula es opcional y ayuda a encontrar tu información con más precisión."
+                      helperText="Si ya tienes cédula en el sistema, con ella basta. Si no, usa tu nombre completo tal como figura en la carta."
                       onSubmit={handleLookup}
                     />
                   </MessageBubble>
@@ -145,6 +145,19 @@ export function ChatWidget() {
                 {step === STEPS.RESULT && lookup?.found ? (
                   <MessageBubble>
                     <p>{lookup.message || 'Encontramos documentos asociados a tus datos.'}</p>
+                    {lookup.user?.nombre_completo ? (
+                      <p className="mt-2 text-sm text-slate-200">
+                        Titular:{' '}
+                        <strong className="font-semibold text-cyan-300">
+                          {lookup.user.nombre_completo}
+                        </strong>
+                        {lookup.user.cedula ? (
+                          <span className="mt-0.5 block text-xs text-slate-400">
+                            Cédula: {lookup.user.cedula}
+                          </span>
+                        ) : null}
+                      </p>
+                    ) : null}
                     {lookup.note ? (
                       <p className="mt-2 text-xs text-slate-400">{lookup.note}</p>
                     ) : null}
@@ -161,78 +174,19 @@ export function ChatWidget() {
 
                 {step === STEPS.RESULT && lookup && !lookup.found ? (
                   <MessageBubble>
-                    <p>{lookup.message || 'No encontramos documentos asociados.'}</p>
-                    {lookup.note ? (
-                      <p className="mt-2 text-xs text-slate-400">{lookup.note}</p>
-                    ) : null}
-                    {lookup.offer_register ? (
-                      <>
-                        <p className="mt-3 text-sm text-slate-200">
-                          Si quieres, puedes registrarte con tu nombre. La cédula sigue siendo
-                          opcional.
-                        </p>
-                        <div className="mt-3 flex flex-col gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setStep(STEPS.REGISTER)}
-                            className="inline-flex items-center justify-center rounded-xl bg-cyan-400 px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-cyan-300"
-                          >
-                            Registrarme
-                          </button>
-                          <button
-                            type="button"
-                            onClick={resetFlow}
-                            className="inline-flex items-center justify-center rounded-xl border border-white/15 px-4 py-2.5 text-sm font-medium text-slate-200 transition hover:border-cyan-400/40 hover:text-cyan-400"
-                          >
-                            No, gracias
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={resetFlow}
-                        className="mt-4 text-xs font-medium text-slate-300 underline-offset-2 hover:text-cyan-400 hover:underline"
-                      >
-                        Hacer otra consulta
-                      </button>
-                    )}
-                  </MessageBubble>
-                ) : null}
-
-                {step === STEPS.REGISTER ? (
-                  <MessageBubble>
-                    <p className="font-medium">Registro opcional</p>
-                    <IdentityForm
-                      initialName={identity.nombre_completo}
-                      initialCedula={identity.cedula}
-                      loading={loading}
-                      submitLabel="Crear registro"
-                      helperText="Por ahora solo pedimos nombre completo y cédula opcional. Más adelante podremos solicitar más datos."
-                      onSubmit={handleRegister}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setStep(STEPS.RESULT)}
-                      className="mt-3 text-xs font-medium text-slate-400 underline-offset-2 hover:text-cyan-400 hover:underline"
+                    <p>{lookup.message || NOT_FOUND_MESSAGE}</p>
+                    <a
+                      href="tel:+50767699968"
+                      className="mt-3 inline-flex items-center justify-center rounded-xl bg-cta px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-yellow-400"
                     >
-                      Volver
-                    </button>
-                  </MessageBubble>
-                ) : null}
-
-                {step === STEPS.REGISTERED ? (
-                  <MessageBubble>
-                    <p className="text-cyan-400">{registerMessage}</p>
-                    <p className="mt-2 text-sm text-slate-300">
-                      Gracias, {identity.nombre_completo}. Tu registro quedó guardado.
-                    </p>
+                      Llamar +507 6769-9968
+                    </a>
                     <button
                       type="button"
                       onClick={resetFlow}
-                      className="mt-4 inline-flex items-center justify-center rounded-xl bg-cta px-4 py-2.5 text-sm font-semibold text-slate-900 transition hover:bg-yellow-400"
+                      className="mt-3 block text-xs font-medium text-slate-300 underline-offset-2 hover:text-cyan-400 hover:underline"
                     >
-                      Nueva consulta
+                      Hacer otra consulta
                     </button>
                   </MessageBubble>
                 ) : null}
