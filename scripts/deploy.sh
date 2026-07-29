@@ -126,6 +126,15 @@ if [[ "${SKIP_FRONTEND}" != "1" ]]; then
   else
     echo "AVISO: no existe public/.htaccess; se omite este paso"
   fi
+
+  # /chatbot/ compartible → SPA (sin tocar chatbot/backend/)
+  if [[ -f "${FRONTEND_DIR}/deploy/chatbot.htaccess" ]]; then
+    log "Subir deploy/chatbot.htaccess → ${REMOTE_ROOT}/chatbot/.htaccess"
+    rsync "${RSYNC_FLAGS[@]}" \
+      -e "${RSYNC_SSH}" \
+      "${FRONTEND_DIR}/deploy/chatbot.htaccess" \
+      "${REMOTE}:${REMOTE_ROOT}/chatbot/.htaccess"
+  fi
 fi
 
 # ── 4) Subir backend Node ───────────────────────────────────────────────────

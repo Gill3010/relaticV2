@@ -44,6 +44,12 @@ export function DocumentsList({ documents = [] }: DocumentsListProps) {
                 </p>
                 <p className="mt-0.5 text-sm font-medium text-slate-50">{doc.titulo}</p>
                 {fecha ? <p className="mt-0.5 text-xs text-slate-400">{fecha}</p> : null}
+                {viewUrl ? (
+                  <p className="mt-2 text-xs leading-relaxed text-slate-300">
+                    Su artículo ya fue publicado. Puede consultarlo con el botón{' '}
+                    <span className="font-semibold text-slate-100">Ver publicación</span>.
+                  </p>
+                ) : null}
               </div>
               {viewUrl ? (
                 <a

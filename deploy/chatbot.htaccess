@@ -1,0 +1,14 @@
+DirectoryIndex index.html
+Options -Indexes
+
+# Sirve la SPA del sitio para /chatbot/ (misma app que el landing).
+# El backend en /chatbot/backend/ no se reescribe.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /chatbot/
+
+  RewriteRule ^backend(/|$) - [L]
+
+  # Cualquier otra ruta bajo /chatbot → index.html raíz de la SPA
+  RewriteRule ^.*$ /index.html [L]
+</IfModule>

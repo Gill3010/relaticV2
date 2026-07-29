@@ -4,8 +4,12 @@ RewriteBase /
 # API Node (Passenger) — no enviar a la SPA
 RewriteRule ^api(?:/|$) - [L]
 
-# Chatbot — su propio index/assets
-RewriteRule ^chatbot(?:/|$) - [L]
+# Backend del chatbot (código Node / storage) — no enviar a la SPA
+RewriteRule ^chatbot/backend(?:/|$) - [L]
+
+# Enlace compartible /chatbot → misma SPA (ruta React /chatbot)
+RewriteRule ^chatbot/?$ /index.html [L]
+RewriteRule ^chatbot/(?!backend)(.*)$ /index.html [L]
 
 RewriteRule ^index\.html$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f

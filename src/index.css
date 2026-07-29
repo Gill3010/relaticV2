@@ -110,3 +110,24 @@ body {
 .animate-pulse-soft {
   animation: pulse-soft 1.2s ease-in-out infinite;
 }
+
+/* ── Congress news ticker (/chatbot) ─────────────────────────────────────── */
+@keyframes congress-ticker {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-congress-ticker {
+  animation: congress-ticker 42s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-congress-ticker {
+    animation: none;
+  }
+}

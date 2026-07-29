@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { useEffect, lazy, Suspense } from 'react';
 import { AccessibilityWidget } from './components/AccessibilityWidget';
 import { LandingPage } from './pages/LandingPage';
+import { ChatbotPage } from './pages/ChatbotPage';
 
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
 const TermsOfService = lazy(() => import('./pages/TermsOfService').then(m => ({ default: m.TermsOfService })));
@@ -23,6 +24,8 @@ function App() {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/chatbot" element={<ChatbotPage />} />
+          <Route path="/chatbot/" element={<ChatbotPage />} />
           <Route path="/privacidad" element={<PrivacyPolicy />} />
           <Route path="/terminos" element={<TermsOfService />} />
         </Routes>
