@@ -35,16 +35,17 @@ export function GlobalNetwork() {
           </div>
 
           <h2 className="text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight text-white mb-6">
-            Conectando conocimiento{' '}
+            Potenciamos la investigación{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cta via-amber-300 to-cyan-400">
               a escala global
             </span>
           </h2>
 
           <p className="text-base md:text-xl text-slate-300 leading-relaxed mb-8">
-            Conectamos investigadores, instituciones y universidades en toda Latinoamérica y el mundo,
-            multiplicando el impacto del conocimiento científico a través de una red viva e interactiva.
+            Impulsamos la colaboración entre científicos, instituciones y universidades de Latinoamérica y el mundo,
+            multiplicando el impacto del conocimiento a través de una red viva e interactiva.
           </p>
+
         </motion.div>
 
         {/* Call to Action Button */}
