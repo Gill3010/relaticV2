@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+
 
 interface UseApiOptions<T> {
   immediate?: boolean;
@@ -25,12 +26,15 @@ export function useApi<T>(
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
+  const apiFnRef = useRef(apiFn);
+  apiFnRef.current = apiFn;
+
   const execute = useCallback(
     async (...args: unknown[]): Promise<T | null> => {
       setLoading(true);
       setError(null);
       try {
-        const result = await apiFn(...args);
+        const result = await apiFnRef.current(...args);
         setData(result);
         onSuccess?.(result);
         return result;
@@ -43,7 +47,7 @@ export function useApi<T>(
         setLoading(false);
       }
     },
-    [apiFn, onSuccess, onError]
+    [onSuccess, onError]
   );
 
   const reset = useCallback(() => {
@@ -56,7 +60,10 @@ export function useApi<T>(
     if (immediate) {
       execute();
     }
-  }, [immediate, execute]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [immediate]);
+
+
 
   return { data, loading, error, execute, reset };
 }
