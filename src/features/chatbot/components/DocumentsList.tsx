@@ -34,7 +34,7 @@ export function DocumentsList({ documents = [] }: DocumentsListProps) {
 
         return (
           <li
-            key={doc.id}
+            key={`${doc.source || 'doc'}-${doc.id}`}
             className="rounded-xl border border-white/10 bg-slate-900/40 px-3.5 py-3"
           >
             <div className="flex flex-col gap-2">

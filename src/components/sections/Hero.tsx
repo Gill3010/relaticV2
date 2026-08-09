@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useHeroAdapter } from '../../adapters/primary/hooks/useHeroAdapter';
 
 // Deterministic pseudo-random (seeded) — keeps scatter positions stable across resizes
 const pr = (seed: number) => {
@@ -9,13 +10,9 @@ const pr = (seed: number) => {
 };
 
 export function Hero() {
-    const slides = [
-        { id: 1, title: 'Revistas Indexadas', description: 'Publicación académica de alto impacto para investigadores y autores.', ctaText: 'Publicar ahora', link: 'https://miembros.relatic.org/login' },
-        { id: 2, title: 'Carteles Digitales', description: 'Presentaciones interactivas modernas para compartir tus ideas.', ctaText: 'Crear Cartel', link: 'https://miembros.relatic.org/login' },
-        { id: 3, title: 'Libros Digitales', description: 'Edición y distribución de libros digitales para llegar a más lectores.', ctaText: 'Publicar Libro', link: 'https://miembros.relatic.org/login' },
-        { id: 4, title: 'Aprendizaje Continuo', description: 'Cursos y actualizaciones constantes para mantenerte a la vanguardia.', ctaText: 'Ver Cursos', link: 'https://miembros.relatic.org/login' },
-        { id: 5, title: 'Propiedad Intelectual', description: 'Protección de tus creaciones — próximamente disponible.', ctaText: 'Saber más', link: '#' },
-    ];
+    const { slides } = useHeroAdapter();
+
+
 
     const [currentSlide, setCurrentSlide] = useState(0);
     const canvasRef = useRef<HTMLCanvasElement>(null);

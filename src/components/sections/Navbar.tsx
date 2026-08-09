@@ -1,24 +1,15 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, BookOpen, Monitor, Book, GraduationCap, Scale } from 'lucide-react';
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
-}
+import { Menu, X, ChevronDown } from 'lucide-react';
+import { cn } from '../../lib/cn';
+import { useServicesAdapter } from '../../adapters/primary/hooks/useServicesAdapter';
 
 export function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [servicesHovered, setServicesHovered] = useState(false);
+    const { services } = useServicesAdapter();
 
-    const services = [
-        { name: 'Revistas Indexadas', description: 'Publicación académica de alto impacto', icon: BookOpen, href: 'https://relaticpanama.org/_journals/' },
-        { name: 'Carteles Digitales', description: 'Presentaciones interactivas modernas', icon: Monitor, href: 'https://relaticpanama.org/_posters/' },
-        { name: 'Libros Digitales', description: 'Edición y distribución de libros digitales', icon: Book, href: 'https://relaticpanama.org/_books/index.php/edrp/catalog' },
-        { name: 'Plataforma de aprendizaje continuo', description: 'Cursos y actualizaciones constantes', icon: GraduationCap, href: 'https://relaticpanama.org/_classroom/' },
-        { name: 'Propiedad Intelectual', description: 'Protección de tus creaciones', icon: Scale, badge: 'Próximamente' },
-    ];
+
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 px-4 py-4">

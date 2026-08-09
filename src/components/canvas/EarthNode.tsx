@@ -24,7 +24,9 @@ function getRandomPointOnSphere(radius: number) {
 
 // A single animated connection arc
 function ConnectionArc({ start, end, height, color }: { start: THREE.Vector3, end: THREE.Vector3, height: number, color: string }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ref = useRef<any>(null);
+
   const mid = start.clone().lerp(end, 0.5);
   const distance = start.distanceTo(end);
   const midNormalized = mid.normalize().multiplyScalar(PLANET_RADIUS + distance * height);
@@ -32,7 +34,7 @@ function ConnectionArc({ start, end, height, color }: { start: THREE.Vector3, en
   const [offset] = useState(() => Math.random() * 100);
 
   useFrame((state) => {
-    if (ref.current) {
+    if (ref.current && ref.current.material) {
       const time = state.clock.getElapsedTime();
       ref.current.material.dashOffset = time * 0.15 + offset;
     }
@@ -41,6 +43,7 @@ function ConnectionArc({ start, end, height, color }: { start: THREE.Vector3, en
   return (
     <QuadraticBezierLine
       ref={ref}
+
       start={start}
       end={end}
       mid={midNormalized}
@@ -76,36 +79,35 @@ function DataNodes({ points, color }: { points: THREE.Vector3[], color: string }
   return <primitive object={instances} />;
 }
 
+function createOrbitingParticles(count: number, radiusOffset: number) {
+  const items = [];
+  for (let i = 0; i < count; i++) {
+    const radius = PLANET_RADIUS + radiusOffset + Math.random() * 0.4;
+    const speed = (0.05 + Math.random() * 0.2) * (Math.random() > 0.5 ? 1 : -1);
+
+    const axis = new THREE.Vector3(
+      Math.random() - 0.5,
+      Math.random() - 0.5,
+      Math.random() - 0.5
+    ).normalize();
+
+    const pos = new THREE.Vector3(radius, 0, 0);
+    pos.applyAxisAngle(new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2);
+    pos.applyAxisAngle(new THREE.Vector3(0, 0, 1), Math.random() * Math.PI * 2);
+
+    items.push({ pos, axis, speed });
+  }
+  return items;
+}
+
 // Orbiting Particles (Satellites) + Dynamic Network
 function OrbitingParticles({ count, color, radiusOffset }: { count: number, color: string, radiusOffset: number }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
   const linesRef = useRef<THREE.LineSegments>(null);
 
-  const particles = useMemo(() => {
-    const items = [];
-    for (let i = 0; i < count; i++) {
-      const radius = PLANET_RADIUS + radiusOffset + Math.random() * 0.4;
-      const speed = (0.05 + Math.random() * 0.2) * (Math.random() > 0.5 ? 1 : -1);
-
-      // Random rotation axis
-      const axis = new THREE.Vector3(
-        Math.random() - 0.5,
-        Math.random() - 0.5,
-        Math.random() - 0.5
-      ).normalize();
-
-      const pos = new THREE.Vector3(radius, 0, 0);
-      pos.applyAxisAngle(new THREE.Vector3(0, 1, 0), Math.random() * Math.PI * 2);
-      pos.applyAxisAngle(new THREE.Vector3(0, 0, 1), Math.random() * Math.PI * 2);
-
-      items.push({ pos, axis, speed });
-    }
-    return items;
-  }, [count, radiusOffset]);
-
+  const [particles] = useState(() => createOrbitingParticles(count, radiusOffset));
   const dummy = useMemo(() => new THREE.Object3D(), []);
 
-  // Pre-allocate buffer for lines
   const maxLines = (count * (count - 1)) / 2;
   const positions = useMemo(() => new Float32Array(maxLines * 6), [maxLines]);
 
@@ -134,6 +136,7 @@ function OrbitingParticles({ count, color, radiusOffset }: { count: number, colo
         const p1 = particles[i].pos;
         const p2 = particles[j].pos;
         if (p1.distanceToSquared(p2) < thresholdSq) {
+          // eslint-disable-next-line react-hooks/immutability
           positions[lineIndex++] = p1.x;
           positions[lineIndex++] = p1.y;
           positions[lineIndex++] = p1.z;
@@ -141,6 +144,7 @@ function OrbitingParticles({ count, color, radiusOffset }: { count: number, colo
           positions[lineIndex++] = p2.y;
           positions[lineIndex++] = p2.z;
         }
+
       }
     }
 
@@ -169,6 +173,7 @@ function OrbitingParticles({ count, color, radiusOffset }: { count: number, colo
       </lineSegments>
     </group>
   );
+
 }
 export function EarthNode() {
   const groupRef = useRef<THREE.Group>(null);

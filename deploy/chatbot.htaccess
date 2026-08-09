@@ -1,7 +1,7 @@
 DirectoryIndex index.html
 Options -Indexes
 
-# Sirve la SPA del sitio para /chatbot/ (misma app que el landing).
+# Sirve index.html local de /chatbot/ (metadatos Open Graph UTE).
 # El backend en /chatbot/backend/ no se reescribe.
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -9,6 +9,9 @@ Options -Indexes
 
   RewriteRule ^backend(/|$) - [L]
 
-  # Cualquier otra ruta bajo /chatbot → index.html raíz de la SPA
-  RewriteRule ^.*$ /index.html [L]
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  RewriteRule ^.*$ index.html [L]
 </IfModule>

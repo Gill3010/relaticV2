@@ -99,8 +99,10 @@ if [[ "${SKIP_FRONTEND}" != "1" ]]; then
   (
     cd "${FRONTEND_DIR}"
     npm run build
+    node scripts/generate-chatbot-index.cjs
   )
   [[ -d "${FRONTEND_DIR}/dist" ]] || die "No se generó dist/"
+  [[ -f "${FRONTEND_DIR}/dist/chatbot/index.html" ]] || die "No se generó dist/chatbot/index.html"
 else
   log "SKIP_FRONTEND=1 — se omite build/rsync de la SPA"
 fi
@@ -110,6 +112,7 @@ if [[ "${SKIP_FRONTEND}" != "1" ]]; then
   log "rsync dist/ → ${REMOTE}:${REMOTE_ROOT}/"
   rsync "${RSYNC_FLAGS[@]}" --delete \
     "${PROTECTED_EXCLUDES[@]}" \
+    --exclude 'chatbot/index.html' \
     -e "${RSYNC_SSH}" \
     "${FRONTEND_DIR}/dist/" \
     "${REMOTE}:${REMOTE_ROOT}/"
@@ -127,13 +130,21 @@ if [[ "${SKIP_FRONTEND}" != "1" ]]; then
     echo "AVISO: no existe public/.htaccess; se omite este paso"
   fi
 
-  # /chatbot/ compartible → SPA (sin tocar chatbot/backend/)
+  # /chatbot/ compartible → index con Open Graph UTE (sin tocar chatbot/backend/)
   if [[ -f "${FRONTEND_DIR}/deploy/chatbot.htaccess" ]]; then
     log "Subir deploy/chatbot.htaccess → ${REMOTE_ROOT}/chatbot/.htaccess"
     rsync "${RSYNC_FLAGS[@]}" \
       -e "${RSYNC_SSH}" \
       "${FRONTEND_DIR}/deploy/chatbot.htaccess" \
       "${REMOTE}:${REMOTE_ROOT}/chatbot/.htaccess"
+  fi
+
+  if [[ -f "${FRONTEND_DIR}/dist/chatbot/index.html" ]]; then
+    log "Subir dist/chatbot/index.html → ${REMOTE_ROOT}/chatbot/index.html (OG UTE)"
+    rsync "${RSYNC_FLAGS[@]}" \
+      -e "${RSYNC_SSH}" \
+      "${FRONTEND_DIR}/dist/chatbot/index.html" \
+      "${REMOTE}:${REMOTE_ROOT}/chatbot/index.html"
   fi
 fi
 
