@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MessageCircle, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { lookupIdentity } from './api/chatApi';
+import { useChatbotAdapter } from '../../adapters/primary/hooks/useChatbotAdapter';
 import { ChatShell } from './components/ChatShell';
 import { DocumentsList } from './components/DocumentsList';
 import { IdentityForm } from './components/IdentityForm';
@@ -14,8 +14,7 @@ const STEPS = {
   RESULT: 'result',
 } as const satisfies Record<string, ChatStep>;
 
-const NOT_FOUND_MESSAGE =
-  'Verifique sus datos e inténtelo nuevamente. Si el problema persiste, comuníquese al siguiente contacto: +507 6769-9968.';
+const NOT_FOUND_MESSAGE = 'No apareces? Informa aquí.';
 
 type ChatWidgetProps = {
   /** floating = botón del landing; page = enlace directo /chatbot */
@@ -23,7 +22,9 @@ type ChatWidgetProps = {
 };
 
 export function ChatWidget({ variant = 'floating' }: ChatWidgetProps) {
+  const { lookupIdentity } = useChatbotAdapter();
   const isPage = variant === 'page';
+
   const [open, setOpen] = useState(isPage);
   const [step, setStep] = useState<ChatStep>(STEPS.IDENTITY);
   const [loading, setLoading] = useState(false);
@@ -45,7 +46,10 @@ export function ChatWidget({ variant = 'floating' }: ChatWidgetProps) {
     setError('');
     setIdentity(data);
     try {
-      const result = await lookupIdentity(data);
+      const [result] = await Promise.all([
+        lookupIdentity(data),
+        new Promise((resolve) => setTimeout(resolve, 400)),
+      ]);
       setLookup(result);
       if (result.user?.nombre_completo) {
         setIdentity((prev) => ({
@@ -61,6 +65,7 @@ export function ChatWidget({ variant = 'floating' }: ChatWidgetProps) {
       setLoading(false);
     }
   }
+
 
   function resetFlow() {
     setStep(STEPS.IDENTITY);

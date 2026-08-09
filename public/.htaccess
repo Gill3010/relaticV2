@@ -7,9 +7,12 @@ RewriteRule ^api(?:/|$) - [L]
 # Backend del chatbot (código Node / storage) — no enviar a la SPA
 RewriteRule ^chatbot/backend(?:/|$) - [L]
 
-# Enlace compartible /chatbot → misma SPA (ruta React /chatbot)
-RewriteRule ^chatbot/?$ /index.html [L]
-RewriteRule ^chatbot/(?!backend)(.*)$ /index.html [L]
+# /chatbot/ usa su propio index.html (Open Graph UTE para WhatsApp, etc.)
+RewriteRule ^chatbot/index\.html$ - [L]
+RewriteCond %{DOCUMENT_ROOT}/chatbot/index.html -f
+RewriteRule ^chatbot/?$ /chatbot/index.html [L]
+RewriteCond %{DOCUMENT_ROOT}/chatbot/index.html -f
+RewriteRule ^chatbot/(?!backend)(.*)$ /chatbot/index.html [L]
 
 RewriteRule ^index\.html$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f

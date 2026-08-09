@@ -7,10 +7,12 @@ export type ChatUser = {
   id: number;
   nombre_completo: string;
   cedula: string | null;
+  source?: 'doctorado' | 'maestria';
 };
 
 export type ChatDocument = {
   id: number;
+  source?: 'doctorado' | 'maestria';
   tipo: string;
   titulo: string;
   fecha: string;

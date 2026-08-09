@@ -1,19 +1,10 @@
 import { motion } from 'framer-motion';
-
-const images = [
-    { src: '/institutions/Aiu.jpeg', alt: 'AIU', href: '' },
-    { src: '/institutions/Centrolatinoamericano.jpeg', alt: 'Centro Latinoamericano', href: 'https://cespecorporativa.org/' },
-    { src: '/institutions/Crupo.jpeg', alt: 'Grupo Panamá Oeste', href: 'https://crupanamaoeste.up.ac.pa/' },
-    { src: '/institutions/Investigadores.jpeg', alt: 'Red de Investigadores', href: 'https://www.facebook.com/edgardo.reedergonzalez.5' },
-    { src: '/institutions/Redipai.jpeg', alt: 'REDIPAI', href: '' },
-    { src: '/institutions/Santander.jpeg', alt: 'Universidad Santander', href: 'https://usantander.edu.pa/' },
-    { src: '/institutions/Udellpa.jpeg', alt: 'UDEL', href: 'https://udellpa.edu.pa/' },
-    { src: '/institutions/Uea.jpeg', alt: 'UEA', href: '' },
-    { src: '/institutions/Unihossana.jpeg', alt: 'Unihossana', href: 'https://uh.ac.pa/' },
-    { src: '/institutions/Metxi.jpeg', alt: 'Metxi', href: 'https://www.metxi.net/Metxi/' },
-];
+import { useInstitutionsAdapter } from '../../adapters/primary/hooks/useInstitutionsAdapter';
 
 export function InstitutionsCarousel() {
+    const { institutions: images } = useInstitutionsAdapter();
+
+
 
     // Marquee: La animación se desplazará constantemente duplicando los elementos
     const marqueeVariants = {
