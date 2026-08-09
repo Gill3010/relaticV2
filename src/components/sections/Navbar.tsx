@@ -12,7 +12,8 @@ export function Navbar() {
 
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 px-4 py-4">
+        <header className="fixed top-[2.75rem] left-0 right-0 z-50 px-4 py-4">
+
             <nav className="max-w-7xl mx-auto glass rounded-2xl px-6 py-4 flex items-center justify-between text-slate-800 dark:text-white bg-white/40 dark:bg-slate-900/40">
                 {/* Logo */}
                 <a href="/" className="flex-shrink-0 flex items-center gap-3 focus:outline-none cursor-pointer">
