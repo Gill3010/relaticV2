@@ -55,10 +55,12 @@ PROTECTED_EXCLUDES=(
   --exclude '_journals/'
   --exclude '_posters/'
   --exclude '_carteles/'
+  --exclude '_valladolid/'
   --exclude '_events/'
   --exclude '_speakers/'
   --exclude '_index/'
   --exclude '_protect/'
+  --exclude '_*/'
   --exclude 'editorialecuador.org/'
   --exclude 'revistas.editorialecuador.org/'
   --exclude 'laboratorio.editorialecuador.org/'
@@ -71,6 +73,7 @@ PROTECTED_EXCLUDES=(
   --exclude '.trash/'
   --exclude 'tmp/'
 )
+
 
 
 log() { printf '\n==> %s\n' "$*"; }
