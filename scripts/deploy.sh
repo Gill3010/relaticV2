@@ -54,6 +54,7 @@ PROTECTED_EXCLUDES=(
   --exclude '_books/'
   --exclude '_journals/'
   --exclude '_posters/'
+  --exclude '_carteles/'
   --exclude '_events/'
   --exclude '_speakers/'
   --exclude '_index/'
@@ -70,6 +71,7 @@ PROTECTED_EXCLUDES=(
   --exclude '.trash/'
   --exclude 'tmp/'
 )
+
 
 log() { printf '\n==> %s\n' "$*"; }
 die() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }

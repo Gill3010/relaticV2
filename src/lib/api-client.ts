@@ -3,15 +3,22 @@ export interface ApiError extends Error {
   data?: unknown;
 }
 
-const DEFAULT_API_BASE = (
-  import.meta.env.VITE_API_BASE_URL || 'https://relaticpanama.org/api/chat'
-).replace(/\/$/, '');
+function getApiBaseUrl(): string {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (import.meta.env.PROD) {
+    if (!envUrl || envUrl.includes('127.0.0.1') || envUrl.includes('localhost')) {
+      return 'https://relaticpanama.org/api/chat';
+    }
+  }
+  return (envUrl || 'https://relaticpanama.org/api/chat').replace(/\/$/, '');
+}
 
 export async function request<T>(
   path: string,
   options: RequestInit = {},
-  baseUrl: string = DEFAULT_API_BASE
+  baseUrl: string = getApiBaseUrl()
 ): Promise<T> {
+
   const url = path.startsWith('http://') || path.startsWith('https://')
     ? path
     : `${baseUrl.replace(/\/$/, '')}${path.startsWith('/') ? path : `/${path}`}`;

@@ -3,8 +3,14 @@ import { AppContext } from './AppContext';
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://relaticpanama.org/api/chat';
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+
+  const apiBaseUrl =
+    import.meta.env.PROD && (envUrl?.includes('127.0.0.1') || envUrl?.includes('localhost'))
+      ? 'https://relaticpanama.org/api/chat'
+      : (envUrl || 'https://relaticpanama.org/api/chat');
   const isChatbotEnabled = true;
+
 
   const toggleTheme = () => {
     setTheme((prev) => {
