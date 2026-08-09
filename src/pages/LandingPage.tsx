@@ -7,11 +7,14 @@ import { ExploreRelatic } from '../components/sections/ExploreRelatic';
 import { GlobalNetwork } from '../components/sections/GlobalNetwork';
 import { ScrollIndicator } from '../components/sections/ScrollIndicator';
 import { ChatWidget } from '../features/chatbot/ChatWidget';
+import { CongressTicker } from '../features/congress/CongressTicker';
 
 export function LandingPage() {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white selection:bg-cta selection:text-slate-900 font-sans">
+            <CongressTicker />
             <Navbar />
+
 
             {/* Espacio + badge "Bienvenido a la Versión 2.0" entre Navbar y Hero */}
             <div className="pt-28 md:pt-32 px-4 md:px-6 max-w-7xl mx-auto flex flex-col items-center">
