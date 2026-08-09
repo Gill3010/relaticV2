@@ -4,11 +4,15 @@ import { AppContext } from './AppContext';
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const envUrl = import.meta.env.VITE_API_BASE_URL;
+  const defaultProdUrl =
+    typeof window !== 'undefined' && window.location?.origin
+      ? `${window.location.origin.replace(/\/$/, '')}/api/chat`
+      : 'https://relaticpanama.org/api/chat';
 
   const apiBaseUrl =
     import.meta.env.PROD && (envUrl?.includes('127.0.0.1') || envUrl?.includes('localhost'))
-      ? 'https://relaticpanama.org/api/chat'
-      : (envUrl || 'https://relaticpanama.org/api/chat');
+      ? defaultProdUrl
+      : (envUrl || defaultProdUrl);
   const isChatbotEnabled = true;
 
 
