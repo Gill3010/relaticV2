@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
-import { fetchCartaPdfObjectUrl } from './adminApi';
+import { Download, ExternalLink, X } from 'lucide-react';
+import { cartaDownloadUrl, fetchCartaPdfObjectUrl } from './adminApi';
 import { adminErrorMessage, isCartaGoneError, isSessionError } from './adminErrors';
 import type { AdminCarta } from './types';
 import { Spinner } from './AdminUI';
@@ -26,19 +26,15 @@ export function CartaPreview({ carta, onClose, onSessionExpired }: CartaPreviewP
 
   useEffect(() => {
     let cancelled = false;
-    let objectUrl = '';
     setLoading(true);
     setError('');
     setPdfUrl(null);
 
     fetchCartaPdfObjectUrl(carta.source, carta.document_id)
       .then((url) => {
-        objectUrl = url;
         if (!cancelled) {
           setPdfUrl(url);
           setLoading(false);
-        } else {
-          URL.revokeObjectURL(url);
         }
       })
       .catch((err) => {
@@ -57,7 +53,6 @@ export function CartaPreview({ carta, onClose, onSessionExpired }: CartaPreviewP
 
     return () => {
       cancelled = true;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
     };
   }, [carta.document_id, carta.source, onSessionExpired]);
 
@@ -79,14 +74,35 @@ export function CartaPreview({ carta, onClose, onSessionExpired }: CartaPreviewP
             <h2 className="truncate text-base font-bold text-white">{carta.nombre_completo}</h2>
             <p className="truncate text-xs text-slate-400">{carta.titulo}</p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Cerrar vista previa"
-            className="rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition-colors hover:border-white/20 hover:text-cta"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <div className="flex flex-shrink-0 items-center gap-2">
+            <a
+              href={cartaDownloadUrl(carta.source, carta.document_id)}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Abrir PDF"
+              aria-label={`Abrir PDF de ${carta.nombre_completo}`}
+              className="rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition-colors hover:border-white/20 hover:text-cta"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </a>
+            <a
+              href={cartaDownloadUrl(carta.source, carta.document_id)}
+              download
+              title="Descargar"
+              aria-label={`Descargar PDF de ${carta.nombre_completo}`}
+              className="rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition-colors hover:border-white/20 hover:text-cta"
+            >
+              <Download className="h-4 w-4" />
+            </a>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Cerrar vista previa"
+              className="rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition-colors hover:border-white/20 hover:text-cta"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
         <div className="relative min-h-0 flex-1 bg-slate-950">

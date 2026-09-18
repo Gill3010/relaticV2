@@ -95,7 +95,8 @@ export async function fetchCartaPdfObjectUrl(
   source: AdminCarta['source'] | string,
   documentId: number,
 ): Promise<string> {
-  const res = await adminFetch(`${cartaDownloadUrl(source, documentId)}?inline=1`, {
+  const url = `${cartaDownloadUrl(source, documentId)}?inline=1`;
+  const res = await adminFetch(url, {
     credentials: 'include',
   });
   const type = res.headers.get('content-type') || '';
@@ -103,8 +104,8 @@ export async function fetchCartaPdfObjectUrl(
     await parseJson(res, 'carta');
     throw new AdminApiError('No se pudo abrir el PDF.', { kind: 'generic' });
   }
-  const blob = await res.blob();
-  return URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
+  // URL autenticada (misma cookie). Un blob: deja el visor en gris en Chrome.
+  return url;
 }
 
 export async function createCarta(form: FormData): Promise<CartaCreateResponse> {
