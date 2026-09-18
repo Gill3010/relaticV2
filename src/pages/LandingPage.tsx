@@ -16,8 +16,8 @@ export function LandingPage() {
             <Navbar />
 
 
-            {/* Espacio + badge "Bienvenido a la Versión 2.0" entre Navbar y Hero */}
-            <div className="pt-28 md:pt-32 px-4 md:px-6 max-w-7xl mx-auto flex flex-col items-center">
+            {/* Espacio bajo ticker (2.75rem) + navbar fijo (~7.5rem) para que el badge no quede oculto */}
+            <div className="pt-44 md:pt-48 px-4 md:px-6 max-w-7xl mx-auto flex flex-col items-center">
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/60 dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full text-sm font-medium mb-8 shadow-sm backdrop-blur-md self-center">
                     <span className="w-2 h-2 rounded-full bg-cta animate-pulse"></span>
                     Bienvenidos a RELATIC PANAMÁ
