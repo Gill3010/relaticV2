@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Download, Eye, Pencil, RotateCcw, Search, Trash2 } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ChevronLeft, ChevronRight, Download, Eye, Pencil, RotateCcw, Search, Trash2 } from 'lucide-react';
 import { cartaDownloadUrl, listCartas } from './adminApi';
 import type { AdminCarta } from './types';
 import { adminErrorMessage, isSessionError } from './adminErrors';
@@ -16,11 +16,29 @@ type CartasListProps = {
   onSessionExpired?: () => void;
 };
 
+/** Filas por página del listado. Sube o baja este número si hace falta. */
+const PAGE_SIZE = 25;
+
 const filtros = [
   { value: '', label: 'Todas' },
   { value: 'maestria', label: 'Maestría' },
   { value: 'doctorado', label: 'Doctorado' },
 ] as const;
+
+function pageWindow(current: number, total: number): Array<number | 'ellipsis'> {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  const set = new Set<number>([1, total, current - 1, current, current + 1]);
+  const sorted = [...set].filter((n) => n >= 1 && n <= total).sort((a, b) => a - b);
+  const out: Array<number | 'ellipsis'> = [];
+  for (const n of sorted) {
+    const prev = out[out.length - 1];
+    if (typeof prev === 'number' && n - prev > 1) out.push('ellipsis');
+    out.push(n);
+  }
+  return out;
+}
 
 function formatFecha(value: string | null | undefined) {
   if (!value) return '—';
@@ -42,6 +60,8 @@ export function CartasList({
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [preview, setPreview] = useState<AdminCarta | null>(null);
+  const [page, setPage] = useState(1);
+  const listTopRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedQ(q), 400);
@@ -79,6 +99,23 @@ export function CartasList({
     () => (nivel ? items.filter((item) => item.source === nivel) : items),
     [items, nivel],
   );
+
+  const totalPages = Math.max(1, Math.ceil(visibles.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageItems = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return visibles.slice(start, start + PAGE_SIZE);
+  }, [visibles, currentPage]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedQ, nivel, papelera, refreshKey]);
+
+  function goToPage(next: number) {
+    const clamped = Math.min(Math.max(1, next), totalPages);
+    setPage(clamped);
+    listTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   const conteos = useMemo(
     () => ({
@@ -146,12 +183,18 @@ export function CartasList({
             <span className="font-semibold text-white">{visibles.length}</span>{' '}
             {visibles.length === 1 ? 'registro' : 'registros'}
             {debouncedQ || nivel ? ' (filtro aplicado)' : ''}
+            {visibles.length > PAGE_SIZE
+              ? ` · mostrando ${(currentPage - 1) * PAGE_SIZE + 1 }–${Math.min(currentPage * PAGE_SIZE, visibles.length)}`
+              : ''}
           </>
         )}
       </p>
 
       {/* Tabla densa */}
-      <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg">
+      <div
+        ref={listTopRef}
+        className="scroll-mt-28 overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-lg"
+      >
         <div className="hidden grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,2.5fr)_auto] gap-4 border-b border-white/10 bg-white/5 px-5 py-3 text-[0.65rem] font-bold uppercase tracking-widest text-slate-400 lg:grid">
           <span>Nombre</span>
           <span>Cédula</span>
@@ -159,7 +202,7 @@ export function CartasList({
           <span>Carta</span>
         </div>
 
-        <div className="max-h-[68vh] divide-y divide-white/5 overflow-y-auto">
+        <div className="divide-y divide-white/5">
           {!loading && !visibles.length ? (
             <p className="px-5 py-10 text-center text-sm text-slate-400">
               {papelera
@@ -168,7 +211,7 @@ export function CartasList({
             </p>
           ) : null}
 
-          {visibles.map((item) => (
+          {pageItems.map((item) => (
             <div
               key={`${item.source}-${item.document_id}`}
               className="grid grid-cols-1 gap-3 px-5 py-4 transition-colors hover:bg-white/5 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,2.5fr)_auto] lg:items-center lg:gap-4"
@@ -260,6 +303,62 @@ export function CartasList({
           ))}
         </div>
       </div>
+
+      {!loading && visibles.length > PAGE_SIZE ? (
+        <nav
+          aria-label="Paginación de cartas"
+          className="flex flex-col items-center justify-between gap-3 sm:flex-row"
+        >
+          <p className="text-xs text-slate-500">
+            Página {currentPage} de {totalPages}
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage <= 1}
+              aria-label="Página anterior"
+              className="inline-flex h-9 items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 text-sm font-medium text-slate-200 transition-colors hover:border-white/25 hover:text-cta disabled:pointer-events-none disabled:opacity-40"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Anterior
+            </button>
+            {pageWindow(currentPage, totalPages).map((item, index) =>
+              item === 'ellipsis' ? (
+                <span key={`e-${index}`} className="px-1 text-sm text-slate-500">
+                  …
+                </span>
+              ) : (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => goToPage(item)}
+                  aria-label={`Ir a la página ${item}`}
+                  aria-current={item === currentPage ? 'page' : undefined}
+                  className={cn(
+                    'inline-flex h-9 min-w-9 items-center justify-center rounded-full border px-3 text-sm font-medium transition-all',
+                    item === currentPage
+                      ? 'border-cta bg-cta text-slate-900 shadow-lg shadow-cta/20'
+                      : 'border-white/10 bg-white/5 text-slate-200 hover:border-white/25 hover:text-cta',
+                  )}
+                >
+                  {item}
+                </button>
+              ),
+            )}
+            <button
+              type="button"
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage >= totalPages}
+              aria-label="Página siguiente"
+              className="inline-flex h-9 items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 text-sm font-medium text-slate-200 transition-colors hover:border-white/25 hover:text-cta disabled:pointer-events-none disabled:opacity-40"
+            >
+              Siguiente
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </nav>
+      ) : null}
 
       {preview ? (
         <CartaPreview
