@@ -156,7 +156,7 @@ fi
 # ── 4) Subir backend Node ───────────────────────────────────────────────────
 if [[ "${SKIP_BACKEND}" != "1" ]]; then
   log "rsync chatbot-api → ${REMOTE}:${REMOTE_ROOT}/chatbot/backend/"
-  # Sin --delete agresivo sobre storage/ para no borrar documentos subidos.
+  # Sin --delete: no borra PDFs del servidor. Tampoco sube PDFs ni dumps locales.
   rsync "${RSYNC_FLAGS[@]}" \
     --exclude 'node_modules/' \
     --exclude '.env' \
@@ -164,6 +164,8 @@ if [[ "${SKIP_BACKEND}" != "1" ]]; then
     --exclude 'tmp/' \
     --exclude '.git/' \
     --exclude '.DS_Store' \
+    --exclude 'backups/' \
+    --exclude 'storage/documents/' \
     -e "${RSYNC_SSH}" \
     "${BACKEND_LOCAL}/" \
     "${REMOTE}:${REMOTE_ROOT}/chatbot/backend/"
