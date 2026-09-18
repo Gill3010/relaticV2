@@ -94,7 +94,7 @@ export function CongressTicker() {
   return (
     <div
       id="congress-ticker"
-      className="fixed top-0 left-0 right-0 z-[60] w-full overflow-hidden border-b border-cta/10"
+      className="fixed top-0 left-0 right-0 z-40 w-full overflow-hidden border-b border-cta/10"
       style={{ height: '2.75rem', background: 'linear-gradient(90deg, #0c1222 0%, #0f1d32 25%, #0c1222 50%, #0f1d32 75%, #0c1222 100%)' }}
     >
       {/* Subtle animated glow line at bottom */}
@@ -108,7 +108,23 @@ export function CongressTicker() {
 
       {/* Fade edges */}
       <div className="absolute inset-y-0 left-0 w-12 sm:w-20 z-10 pointer-events-none" style={{ background: 'linear-gradient(90deg, #0c1222, transparent)' }} />
-      <div className="absolute inset-y-0 right-0 w-12 sm:w-20 z-10 pointer-events-none" style={{ background: 'linear-gradient(270deg, #0c1222, transparent)' }} />
+      <div className="absolute inset-y-0 right-0 w-32 sm:w-44 z-10 pointer-events-none" style={{ background: 'linear-gradient(270deg, #0c1222 40%, transparent)' }} />
+
+      {/* Static CTA button — always visible on the right */}
+      <a
+        href="https://relaticpanama.org/_events/_valladolid"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="absolute inset-y-0 right-0 z-20 flex items-center pr-3 sm:pr-5 pl-6 sm:pl-10 group"
+        style={{ background: 'linear-gradient(90deg, transparent, #0c1222 30%)' }}
+      >
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cta text-slate-900 text-xs sm:text-sm font-bold tracking-wide shadow-lg shadow-cta/25 transition-all duration-300 group-hover:shadow-cta/50 group-hover:scale-105 group-hover:brightness-110 whitespace-nowrap">
+          Más info
+          <svg className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </span>
+      </a>
     </div>
   );
 }
