@@ -6,6 +6,7 @@ import { ChatbotPage } from './pages/ChatbotPage';
 
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
 const TermsOfService = lazy(() => import('./pages/TermsOfService').then(m => ({ default: m.TermsOfService })));
+const AdminPage = lazy(() => import('./pages/AdminPage').then(m => ({ default: m.AdminPage })));
 
 // Component to handle scroll to top on route change
 function ScrollToTop() {
@@ -47,6 +48,8 @@ function App() {
           <Route path="/chatbot/" element={<ChatbotPage />} />
           <Route path="/privacidad" element={<PrivacyPolicy />} />
           <Route path="/terminos" element={<TermsOfService />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/" element={<AdminPage />} />
         </Routes>
       </Suspense>
     </Router>
